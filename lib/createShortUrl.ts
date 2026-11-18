@@ -5,15 +5,23 @@ export type CreateShortUrlResult =
   | { ok: true; alias: string }
   | { ok: false; error: string };
 
-const ALIAS_PATTERN = /^[a-zA-Z0-9-_]{1,50}$/;
+const ALLOWED_ALIAS_CHARS =
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 
 function isValidUrl(value: string): boolean {
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch {
+  return value.startsWith("http://") || value.startsWith("https://");
+}
+
+function isValidAlias(value: string): boolean {
+  if (value.length < 1 || value.length > 50) {
     return false;
   }
+  for (const ch of value) {
+    if (!ALLOWED_ALIAS_CHARS.includes(ch)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export default async function createShortUrl(
@@ -30,7 +38,7 @@ export default async function createShortUrl(
     };
   }
 
-  if (!ALIAS_PATTERN.test(cleanAlias)) {
+  if (!isValidAlias(cleanAlias)) {
     return {
       ok: false,
       error:
@@ -50,7 +58,6 @@ export default async function createShortUrl(
   const res = await linksCollection.insertOne({
     alias: cleanAlias,
     url: cleanUrl,
-    createdAt: new Date(),
   });
 
   if (!res.acknowledged) {

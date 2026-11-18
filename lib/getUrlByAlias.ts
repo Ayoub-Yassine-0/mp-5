@@ -1,3 +1,4 @@
+"use server";
 import getCollection, { LINKS_COLLECTION } from "@/db";
 
 export default async function getUrlByAlias(

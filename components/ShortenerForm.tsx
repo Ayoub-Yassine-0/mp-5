@@ -8,14 +8,12 @@ export default function ShortenerForm() {
   const [alias, setAlias] = useState("");
   const [error, setError] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setShortUrl("");
-    setCopied(false);
     setSaving(true);
 
     const result = await createShortUrl(url, alias);
@@ -27,11 +25,6 @@ export default function ShortenerForm() {
     }
 
     setShortUrl(`${window.location.origin}/${result.alias}`);
-  }
-
-  async function handleCopy() {
-    await navigator.clipboard.writeText(shortUrl);
-    setCopied(true);
   }
 
   return (
@@ -67,21 +60,9 @@ export default function ShortenerForm() {
       {shortUrl !== "" && (
         <div className={styles.result}>
           <p>Your shortened URL:</p>
-          <a
-            className={styles.shortUrl}
-            href={shortUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className={styles.shortUrl} href={shortUrl}>
             {shortUrl}
           </a>
-          <button
-            className={styles.copyButton}
-            type="button"
-            onClick={handleCopy}
-          >
-            {copied ? "Copied!" : "Copy"}
-          </button>
         </div>
       )}
     </form>

@@ -70,13 +70,3 @@
   color: #0070f3;
   word-break: break-all;
 }
-
-.copyButton {
-  padding: 8px 16px;
-  border: 1px solid #0070f3;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #0070f3;
-  font-weight: 600;
-  cursor: pointer;
-}
